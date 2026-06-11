@@ -4,6 +4,7 @@ using static Terminal.Gui.TabView;
 
 class Program
 {
+    static List<keyValue> keyvaluelist = new();
     static void Main()
     {
         Application.Init();
@@ -68,23 +69,27 @@ class Program
         detailsTab.View.Add(methodSelectorLabel);
         detailsTab.View.Add(methodSelector);
 
-        for(int i = 0; i < 3; i++)
+        var addButton = new Button("Add keyVal")
         {
-            View row = new View() { X=0, Y=i, Width=Dim.Fill(), Height=1 };
+            X = 0,
+            Y = 0
+        };
 
-            Label keyLabel = new Label() { Y = 0, X = 0, Text="Key: " };
-            TextField keyField = new TextField() { X = 4,Y=0,Width=15 };
-            Label valueLabel = new Label() { Y = 0, X = 20, Text="Value: " };
-            TextField valueField = new TextField() { X = 26, Y = 0, Width = 15 };
+        var container = new View
+        {
+            X = 0, 
+            Y = 1,
+            Width = Dim.Fill(),
+            Height = Dim.Fill() - 3
+        };
 
-            row.Add(keyLabel);
-            row.Add(keyField);
-            row.Add(valueLabel);
-            row.Add(valueField);
+        addButton.Clicked += () =>
+        {
+            addRow(container);
+        };
 
-            paramsTab.View.Add(row);
-        }
-
+        paramsTab.View.Add(addButton);
+        paramsTab.View.Add(container);
 
         tabView.AddTab(detailsTab, true);
         tabView.AddTab(paramsTab, true);
@@ -99,4 +104,30 @@ class Program
 
         Application.Run();
     }
+
+    static void addRow(View container)
+    {
+        var keyval = new keyValue();
+        keyvaluelist.Add(keyval);
+
+        View row = new View() { X = 0, Y = keyvaluelist.Count-1, Width = Dim.Fill(), Height = 1 };
+
+        Label keyLabel = new Label() { Y = 0, X = 0, Text = "Key: " };
+        TextField keyField = new TextField() { X = 4, Y = 0, Width = 15 };
+        Label valueLabel = new Label() { Y = 0, X = 20, Text = "Value: " };
+        TextField valueField = new TextField() { X = 26, Y = 0, Width = 15 };
+
+        row.Add(keyLabel);
+        row.Add(keyField);
+        row.Add(valueLabel);
+        row.Add(valueField);
+
+        container.Add(row);
+    }
+}
+
+class keyValue
+{
+    public string key;
+    public string value;
 }
