@@ -10,5 +10,8 @@ namespace CourierTUI
     {
         public string method;
         public string URL;
+        public string body;
+        public List<KeyValue> parameters;
+        public string contentType;
     }
 }

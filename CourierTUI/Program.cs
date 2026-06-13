@@ -30,9 +30,9 @@ class Program
 
         DataHandler dataHandler = new DataHandler();
 
-        ParametersTab paramsTab = new ParametersTab();
+        ParametersTab paramsTab = new ParametersTab(dataHandler);
         DetailsTab detailsTab = new DetailsTab(dataHandler);
-        BodyTab bodyTab = new BodyTab();
+        BodyTab bodyTab = new BodyTab(dataHandler);
 
         tabView.AddTab(detailsTab.tab, true);
         tabView.AddTab(paramsTab.tab, true);

@@ -54,11 +54,6 @@ namespace CourierTUI
                 Y = 3
             };
 
-            getDataButton.Clicked += () =>
-            {
-                sendRequest(dataHandler.URL);
-            };
-
             URLinput.TextChanged += (a) =>
             {
                 dataHandler.URL = URLinput.Text.ToString();
@@ -69,23 +64,39 @@ namespace CourierTUI
                 dataHandler.method = methodSelector.SelectedItem.ToString();
             };
 
+            var resultTextField = new TextView()
+            {
+                X = 0,
+                Y = 4,
+                Width = Dim.Fill(),
+                Height = Dim.Fill()
+            };
+
+            getDataButton.Clicked += () =>
+            {
+                sendRequest(dataHandler, resultTextField);
+            };
+
+
 
             view.Add(URLlabel);
             view.Add(URLinput);
             view.Add(methodSelectorLabel);
             view.Add(methodSelector);
             view.Add(getDataButton);
+            view.Add(resultTextField);
 
             this.tab = new TabView.Tab("Details", view);
         }
 
 
 
-        public static async void sendRequest(string URL)
+        public static async void sendRequest(DataHandler datahander, View view)
         {
             var client = new HttpClient();
-            var response = await client.GetAsync(URL);
+            var response = await client.GetAsync(datahander.URL);
             string content = await response.Content.ReadAsStringAsync();
+            view.Text = response.ToString();
         }
     }
 }

@@ -9,11 +9,12 @@ namespace CourierTUI
 {
     public class ParametersTab
     {
-        public List<keyValue> keyValues = new();
+        public List<KeyValue> keyValues = new();
         public View view = new View();
         public TabView.Tab tab;
+        public DataHandler handler;
 
-        public ParametersTab()
+        public ParametersTab(DataHandler handler)
         {
             var contentTypeLabel = new Label("Content Type:")
             {
@@ -69,11 +70,12 @@ namespace CourierTUI
             view.Add(contentTypeSelector);
 
             this.tab = new TabView.Tab("Params", this.view);
+            this.handler = handler;
         }
 
         public void addRow(View container)
         {
-            var keyval = new keyValue();
+            var keyval = new KeyValue();
             keyValues.Add(keyval);
 
             View row = new View() { X = 0, Y = keyValues.Count - 1, Width = Dim.Fill(), Height = 1 };
@@ -85,7 +87,14 @@ namespace CourierTUI
 
             keyField.TextChanged += (e) =>
             {
-                keyval.value = keyField.Text.ToString();
+                keyval.key = keyField.Text.ToString();
+                handler.parameters = keyValues;
+            };
+
+            valueField.TextChanged += (e) =>
+            {
+                keyval.value = valueField.Text.ToString();
+                handler.parameters = keyValues;
             };
 
             row.Add(keyLabel);
@@ -95,11 +104,5 @@ namespace CourierTUI
 
             container.Add(row);
         }
-    }
-
-    public class keyValue
-    {
-        public string key;
-        public string value;
     }
 }

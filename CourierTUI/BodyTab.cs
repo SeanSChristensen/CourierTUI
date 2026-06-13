@@ -11,8 +11,9 @@ namespace CourierTUI
     {
         public View view = new View();
         public TabView.Tab tab;
+        public DataHandler dataHandler;
 
-        public BodyTab()
+        public BodyTab(DataHandler dataHandler)
         {
             var bodyLabel = new Label()
             {
@@ -30,10 +31,16 @@ namespace CourierTUI
                 Height = Dim.Fill()
             };
 
+            bodyTextField.ContentsChanged += (e) =>
+            {
+                dataHandler.body = bodyTextField.Text.ToString();
+            };
+
             view.Add(bodyLabel);
             view.Add(bodyTextField);
 
             this.tab = new TabView.Tab("Body", view);
+            this.dataHandler = dataHandler;
         }
     }
 }
