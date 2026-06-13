@@ -2,10 +2,10 @@
 using Terminal.Gui;
 using static Terminal.Gui.TabView;
 using CourierTUI;
+using System.Net.Http;
 
 class Program
 {
-    static List<keyValue> keyvaluelist = new();
     static void Main()
     {
         Application.Init();
@@ -28,18 +28,15 @@ class Program
             Height = Dim.Fill()
         };
 
-        var authTab = new TabView.Tab("Auth", new Label("Hello from Tab 2"));
+        DataHandler dataHandler = new DataHandler();
 
         ParametersTab paramsTab = new ParametersTab();
-        DetailsTab detailsTab = new DetailsTab();
+        DetailsTab detailsTab = new DetailsTab(dataHandler);
         BodyTab bodyTab = new BodyTab();
-        HeadersTab headersTab = new HeadersTab();
 
         tabView.AddTab(detailsTab.tab, true);
         tabView.AddTab(paramsTab.tab, true);
         tabView.AddTab(bodyTab.tab, true);
-        tabView.AddTab(authTab, true);
-        tabView.AddTab(headersTab.tab, true);
 
         tabView.SelectedTab = tabView.Tabs.First();
 
@@ -48,10 +45,4 @@ class Program
 
         Application.Run();
     }
-}
-
-class keyValue
-{
-    public string key;
-    public string value;
 }

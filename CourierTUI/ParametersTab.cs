@@ -15,22 +15,44 @@ namespace CourierTUI
 
         public ParametersTab()
         {
-            var addButton = new Button("Add keyVal")
+            var contentTypeLabel = new Label("Content Type:")
             {
                 X = 0,
                 Y = 0
+            };
+
+            var contentTypeSelector = new ComboBox()
+            {
+                X = 14,
+                Y = 0,
+                Width = 40,
+                Height = 5
+            };
+
+            contentTypeSelector.SetSource(new string[] { "application/json", "application/x-www-form-urlencoded", "multipart/form-data", "text/plain", "application/xml" });
+
+            var parametersLabel = new Label("Parameters:")
+            {
+                X = 0,
+                Y = 1
+            };
+
+            var addButton = new Button("Add keyVal")
+            {
+                X = 0,
+                Y = 2
             };
 
             var getDataButton = new Button("Print data")
             {
                 X = 15,
-                Y = 0
+                Y = 2
             };
 
             var container = new View
             {
                 X = 0,
-                Y = 1,
+                Y = 3,
                 Width = Dim.Fill(),
                 Height = Dim.Fill() - 3
             };
@@ -42,6 +64,10 @@ namespace CourierTUI
 
             view.Add(addButton);
             view.Add(container);
+            view.Add(parametersLabel);
+            view.Add(contentTypeLabel);
+            view.Add(contentTypeSelector);
+
             this.tab = new TabView.Tab("Params", this.view);
         }
 
