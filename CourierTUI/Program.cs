@@ -28,18 +28,18 @@ class Program
             Height = Dim.Fill()
         };
 
-        var bodyTab = new TabView.Tab("Body", new Label("Hello from Tab 2"));
         var authTab = new TabView.Tab("Auth", new Label("Hello from Tab 2"));
-        var headersTab = new TabView.Tab("Headers", new Label("Hello from Tab 2"));
 
         ParametersTab paramsTab = new ParametersTab();
         DetailsTab detailsTab = new DetailsTab();
+        BodyTab bodyTab = new BodyTab();
+        HeadersTab headersTab = new HeadersTab();
 
         tabView.AddTab(detailsTab.tab, true);
         tabView.AddTab(paramsTab.tab, true);
-        tabView.AddTab(bodyTab, true);
+        tabView.AddTab(bodyTab.tab, true);
         tabView.AddTab(authTab, true);
-        tabView.AddTab(headersTab, true);
+        tabView.AddTab(headersTab.tab, true);
 
         tabView.SelectedTab = tabView.Tabs.First();
 
