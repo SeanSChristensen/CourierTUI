@@ -61,7 +61,7 @@ namespace CourierTUI
 
             methodSelector.SelectedItemChanged += (a) =>
             {
-                dataHandler.method = methodSelector.SelectedItem.ToString();
+                dataHandler.method = methodSelector.Text.ToString();
             };
 
             var resultTextField = new TextView()
@@ -90,13 +90,26 @@ namespace CourierTUI
         }
 
 
-
-        public static async void sendRequest(DataHandler datahander, View view)
+        public static async void sendRequest(DataHandler dataHandler, View view)
         {
             var client = new HttpClient();
-            var response = await client.GetAsync(datahander.URL);
+            var request = new HttpRequestMessage(getRequestMethod(dataHandler.method), dataHandler.URL);
+            var response = await client.SendAsync(request);
             string content = await response.Content.ReadAsStringAsync();
             view.Text = response.ToString();
+        }
+
+        public static HttpMethod getRequestMethod(string method)
+        {
+            switch (method)
+            {
+                case "GET":
+                    return HttpMethod.Get;
+                case "POST":
+                    return HttpMethod.Post;
+                default:
+                    return null;
+            }
         }
     }
 }
