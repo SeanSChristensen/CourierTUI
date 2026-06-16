@@ -32,6 +32,15 @@ namespace CourierTUI
 
             contentTypeSelector.SetSource(new string[] { "application/json", "application/x-www-form-urlencoded", "multipart/form-data", "text/plain", "application/xml" });
 
+            contentTypeSelector.SelectedItemChanged += (e) =>
+            {
+                keyValues.RemoveAll(x => x.key == "Content-Type");
+                KeyValue keyvalue = new KeyValue();
+                keyvalue.key= "Content-Type";
+                keyvalue.value = contentTypeSelector.Text.ToString();
+                keyValues.Add(keyvalue);
+            };
+
             var parametersLabel = new Label("Parameters:")
             {
                 X = 0,

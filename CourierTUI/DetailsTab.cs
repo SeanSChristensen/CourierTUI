@@ -94,9 +94,20 @@ namespace CourierTUI
         {
             var client = new HttpClient();
             var request = new HttpRequestMessage(getRequestMethod(dataHandler.method), dataHandler.URL);
+
+            if (dataHandler.parameters != null)
+            {
+                foreach (KeyValue keyval in dataHandler.parameters)
+                {
+                    request.Headers.Add(keyval.key,keyval.value);
+                }
+            }
+
+            request.Content = new StringContent(dataHandler.body);
+
             var response = await client.SendAsync(request);
             string content = await response.Content.ReadAsStringAsync();
-            view.Text = response.ToString();
+            view.Text = content;
         }
 
         public static HttpMethod getRequestMethod(string method)
