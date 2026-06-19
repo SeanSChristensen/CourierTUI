@@ -34,11 +34,7 @@ namespace CourierTUI
 
             contentTypeSelector.SelectedItemChanged += (e) =>
             {
-                keyValues.RemoveAll(x => x.key == "Content-Type");
-                KeyValue keyvalue = new KeyValue();
-                keyvalue.key= "Content-Type";
-                keyvalue.value = contentTypeSelector.Text.ToString();
-                keyValues.Add(keyvalue);
+                handler.contentType = contentTypeSelector.Text.ToString();
             };
 
             var parametersLabel = new Label("Parameters:")

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Terminal.Gui;
 
@@ -103,11 +104,22 @@ namespace CourierTUI
                 }
             }
 
-            request.Content = new StringContent(dataHandler.body);
+            StringContent requestContent = new StringContent(dataHandler.body);
+            requestContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(dataHandler.contentType);
+            request.Content = requestContent;
 
             var response = await client.SendAsync(request);
             string content = await response.Content.ReadAsStringAsync();
-            view.Text = content;
+
+            string formattedJson = JsonSerializer.Serialize(
+                JsonSerializer.Deserialize<JsonElement>(content),
+                new JsonSerializerOptions
+                {
+                    WriteIndented = true
+                });
+
+
+            view.Text = formattedJson;
         }
 
         public static HttpMethod getRequestMethod(string method)
