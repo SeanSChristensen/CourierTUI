@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,9 @@ namespace CourierTUI
         public View view = new View();
         public TabView.Tab tab;
         public DataHandler handler;
+
+        public TextField keyfield;
+        public TextField valuefield;
 
         public ParametersTab(DataHandler handler)
         {
@@ -55,17 +59,36 @@ namespace CourierTUI
                 Y = 2
             };
 
-            var container = new View
+            var table = new DataTable();
+            table.Columns.Add("Key");
+            table.Columns.Add("Value");
+
+            var container = new TableView(table)
             {
                 X = 0,
-                Y = 3,
+                Y = 5,
                 Width = Dim.Fill(),
-                Height = Dim.Fill() - 3
+                Height = Dim.Fill(),
+                AutoSize = true,
+                Style = {AlwaysShowHeaders = true}
             };
+
+            Label keyLabel = new Label() { Y = 4, X = 0, Text = "Key: " };
+            TextField keyField = new TextField() { X = 4, Y = 4, Width = 15 };
+            this.keyfield = keyField;
+            Label valueLabel = new Label() { Y = 4, X = 20, Text = "Value: " };
+            TextField valueField = new TextField() { X = 26, Y = 4, Width = 15 };
+            this.valuefield = valueField;
+
+            view.Add(keyLabel);
+            view.Add(keyField);
+            view.Add(valueLabel);
+            view.Add(valueField);
+
 
             addButton.Clicked += () =>
             {
-                addRow(container);
+                addRow(table);
             };
 
             view.Add(addButton);
@@ -78,36 +101,9 @@ namespace CourierTUI
             this.handler = handler;
         }
 
-        public void addRow(View container)
+        public void addRow(DataTable datatable)
         {
-            var keyval = new KeyValue();
-            keyValues.Add(keyval);
-
-            View row = new View() { X = 0, Y = keyValues.Count - 1, Width = Dim.Fill(), Height = 1 };
-
-            Label keyLabel = new Label() { Y = 0, X = 0, Text = "Key: " };
-            TextField keyField = new TextField() { X = 4, Y = 0, Width = 15 };
-            Label valueLabel = new Label() { Y = 0, X = 20, Text = "Value: " };
-            TextField valueField = new TextField() { X = 26, Y = 0, Width = 15 };
-
-            keyField.TextChanged += (e) =>
-            {
-                keyval.key = keyField.Text.ToString();
-                handler.parameters = keyValues;
-            };
-
-            valueField.TextChanged += (e) =>
-            {
-                keyval.value = valueField.Text.ToString();
-                handler.parameters = keyValues;
-            };
-
-            row.Add(keyLabel);
-            row.Add(keyField);
-            row.Add(valueLabel);
-            row.Add(valueField);
-
-            container.Add(row);
+            datatable.Rows.Add(this.keyfield.Text.ToString(), this.valuefield.Text.ToString());
         }
     }
 }

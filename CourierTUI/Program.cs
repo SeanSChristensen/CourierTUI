@@ -25,7 +25,7 @@ class Program
             X = 0,
             Y = 1,
             Width = Dim.Percent(100),
-            Height = Dim.Percent(50)
+            Height = Dim.Percent(65)
         };
 
         var methodComboBox = new ComboBox()
@@ -69,7 +69,7 @@ class Program
             X = 0,
             Y = 10,
             Width = Dim.Percent(100),
-            Height = Dim.Percent(50)
+            Height = Dim.Percent(65)
         };
 
         DataHandler dataHandler = new DataHandler();
