@@ -1,8 +1,9 @@
-﻿using System.ComponentModel;
+﻿using CourierTUI;
+using System.ComponentModel;
+using System.Net.Http;
+using System.Text.Json;
 using Terminal.Gui;
 using static Terminal.Gui.TabView;
-using CourierTUI;
-using System.Net.Http;
 
 class Program
 {
@@ -63,19 +64,42 @@ class Program
             Width = 60
         };
 
-
-        var tabView2 = new TabView()
+        var getDataButton = new Button("Print data")
         {
-            X = 0,
-            Y = 10,
-            Width = Dim.Percent(100),
-            Height = Dim.Percent(65)
+            X = 103,
+            Y = 0,
+            Width = 5,
+            Height = 1
         };
 
-        DataHandler dataHandler = new DataHandler();
+        var resultTextField = new TextView()
+        {
+            X = 0,
+            Y = 18,
+            Width = Dim.Fill(),
+            Height = Dim.Fill()
+        };
 
+
+        DataHandler dataHandler = new DataHandler();
         ParametersTab paramsTab = new ParametersTab(dataHandler);
         BodyTab bodyTab = new BodyTab(dataHandler);
+
+        methodComboBox.SelectedItemChanged += (x) =>
+        {
+            dataHandler.method = methodComboBox.Text.ToString();
+        };
+
+        URLinput.TextChanged += (x) =>
+        {
+            dataHandler.URL = URLinput.Text.ToString();
+        };
+
+
+        getDataButton.Clicked += () =>
+        {
+            sendRequest(dataHandler, resultTextField);
+        };
 
         tabView.AddTab(paramsTab.tab, true);
         tabView.AddTab(bodyTab.tab, true);
@@ -86,14 +110,55 @@ class Program
         win.Add(methodLabel);
         win.Add(URLlabel);
         win.Add(URLinput);
-
+        win.Add(getDataButton);
+        win.Add(resultTextField);
         win.Add(tabView);
-        //win.Add(tabView2);
-
-        
-
         top.Add(win);
 
         Application.Run();
+    }
+
+    public static async void sendRequest(DataHandler dataHandler, View view)
+    {
+        var client = new HttpClient();
+        var request = new HttpRequestMessage(getRequestMethod(dataHandler.method), dataHandler.URL);
+
+        if (dataHandler.parameters != null)
+        {
+            foreach (KeyValue keyval in dataHandler.parameters)
+            {
+                request.Headers.Add(keyval.key, keyval.value);
+            }
+        }
+
+        StringContent requestContent = new StringContent(dataHandler.body);
+        requestContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(dataHandler.contentType);
+        request.Content = requestContent;
+
+        var response = await client.SendAsync(request);
+        string content = await response.Content.ReadAsStringAsync();
+
+        string formattedJson = JsonSerializer.Serialize(
+            JsonSerializer.Deserialize<JsonElement>(content),
+            new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
+
+
+        view.Text = formattedJson;
+    }
+
+    public static HttpMethod getRequestMethod(string method)
+    {
+        switch (method)
+        {
+            case "GET":
+                return HttpMethod.Get;
+            case "POST":
+                return HttpMethod.Post;
+            default:
+                return null;
+        }
     }
 }

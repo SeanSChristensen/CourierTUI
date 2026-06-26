@@ -103,6 +103,10 @@ namespace CourierTUI
 
         public void addRow(DataTable datatable)
         {
+            KeyValue keyValue = new KeyValue();
+            keyValue.key = this.keyfield.Text.ToString();
+            keyValue.value = this.valuefield.Text.ToString();
+            keyValues.Add(keyValue);
             datatable.Rows.Add(this.keyfield.Text.ToString(), this.valuefield.Text.ToString());
         }
     }

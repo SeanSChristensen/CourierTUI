@@ -75,7 +75,7 @@ namespace CourierTUI
 
             getDataButton.Clicked += () =>
             {
-                sendRequest(dataHandler, resultTextField);
+                //sendRequest(dataHandler, resultTextField);
             };
 
 
@@ -88,51 +88,6 @@ namespace CourierTUI
             view.Add(resultTextField);
 
             this.tab = new TabView.Tab("Details", view);
-        }
-
-
-        public static async void sendRequest(DataHandler dataHandler, View view)
-        {
-            var client = new HttpClient();
-            var request = new HttpRequestMessage(getRequestMethod(dataHandler.method), dataHandler.URL);
-
-            if (dataHandler.parameters != null)
-            {
-                foreach (KeyValue keyval in dataHandler.parameters)
-                {
-                    request.Headers.Add(keyval.key,keyval.value);
-                }
-            }
-
-            StringContent requestContent = new StringContent(dataHandler.body);
-            requestContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(dataHandler.contentType);
-            request.Content = requestContent;
-
-            var response = await client.SendAsync(request);
-            string content = await response.Content.ReadAsStringAsync();
-
-            string formattedJson = JsonSerializer.Serialize(
-                JsonSerializer.Deserialize<JsonElement>(content),
-                new JsonSerializerOptions
-                {
-                    WriteIndented = true
-                });
-
-
-            view.Text = formattedJson;
-        }
-
-        public static HttpMethod getRequestMethod(string method)
-        {
-            switch (method)
-            {
-                case "GET":
-                    return HttpMethod.Get;
-                case "POST":
-                    return HttpMethod.Post;
-                default:
-                    return null;
-            }
         }
     }
 }
