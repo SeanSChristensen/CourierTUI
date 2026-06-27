@@ -29,6 +29,14 @@ class Program
             Height = Dim.Percent(65)
         };
 
+        var tabView2 = new TabView()
+        {
+            X = 0,
+            Y = 18,
+            Width = Dim.Percent(100),
+            Height = Dim.Percent(45),
+        };
+
         var methodComboBox = new ComboBox()
         {
             X = 8,
@@ -72,17 +80,19 @@ class Program
             Height = 1
         };
 
-        var resultTextField = new TextView()
+        TextView resultText = new TextView()
         {
             X = 0,
-            Y = 18,
+            Y = 0,
             Width = Dim.Fill(),
-            Height = Dim.Fill()
+            Height = 7
         };
+
 
 
         DataHandler dataHandler = new DataHandler();
         ParametersTab paramsTab = new ParametersTab(dataHandler);
+        ResultTab resultTab = new ResultTab(dataHandler, resultText);
         BodyTab bodyTab = new BodyTab(dataHandler);
 
         methodComboBox.SelectedItemChanged += (x) =>
@@ -98,11 +108,13 @@ class Program
 
         getDataButton.Clicked += () =>
         {
-            sendRequest(dataHandler, resultTextField);
+            sendRequest(dataHandler, resultText);
         };
 
         tabView.AddTab(paramsTab.tab, true);
         tabView.AddTab(bodyTab.tab, true);
+        tabView2.AddTab(resultTab.tab, true);
+
 
         tabView.SelectedTab = tabView.Tabs.First();
 
@@ -111,8 +123,8 @@ class Program
         win.Add(URLlabel);
         win.Add(URLinput);
         win.Add(getDataButton);
-        win.Add(resultTextField);
         win.Add(tabView);
+        win.Add(tabView2);
         top.Add(win);
 
         Application.Run();
@@ -131,7 +143,17 @@ class Program
             }
         }
 
-        StringContent requestContent = new StringContent(dataHandler.body);
+        StringContent requestContent;
+
+        if (dataHandler.body != null)
+        {
+            requestContent = new StringContent(dataHandler.body);
+        }
+        else
+        {
+            requestContent = new StringContent("");
+        }
+
         requestContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(dataHandler.contentType);
         request.Content = requestContent;
 

@@ -108,6 +108,7 @@ namespace CourierTUI
             keyValue.value = this.valuefield.Text.ToString();
             keyValues.Add(keyValue);
             datatable.Rows.Add(this.keyfield.Text.ToString(), this.valuefield.Text.ToString());
+            handler.parameters.Add(keyValue);
         }
     }
 }
