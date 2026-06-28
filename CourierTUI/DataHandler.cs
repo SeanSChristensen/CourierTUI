@@ -13,5 +13,6 @@ namespace CourierTUI
         public string body;
         public List<KeyValue> parameters = new List<KeyValue>();
         public string contentType;
+        public bool isLoading = false;
     }
 }

@@ -106,9 +106,15 @@ class Program
         };
 
 
-        getDataButton.Clicked += () =>
+        getDataButton.Clicked += async () =>
         {
-            sendRequest(dataHandler, resultText);
+            try
+            {
+                dataHandler.isLoading = true;
+                sendRequest(dataHandler, resultText);
+            }
+            finally { dataHandler.isLoading = false;  }
+
         };
 
         tabView.AddTab(paramsTab.tab, true);

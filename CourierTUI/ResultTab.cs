@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using Terminal.Gui;
 
 namespace CourierTUI
@@ -28,6 +30,15 @@ namespace CourierTUI
                 Width = Dim.Fill(),
                 Height = 1
             };
+
+            var timer = Application.MainLoop.AddTimeout(TimeSpan.FromMilliseconds(100), _ =>
+            {
+                if (dataHandler.isLoading)
+                {
+                    progressBar.Pulse();
+                }
+                return true;
+            });
 
 
             view.Add(resultText);
